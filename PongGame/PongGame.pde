@@ -38,7 +38,7 @@ void draw() {
   b.moveBall();
   b.checkEdges();
   b.checkMissed();
-  b.checkCollision();
+  b.checkCollision(p);
   s.incrementScore();
   s.resetScore();
   collection.initBrickCollection();
@@ -103,9 +103,9 @@ class Ball {
     }
   }
 
-  void checkCollision() {
+  void checkCollision(Paddle p) {
     hitPaddle = false;
-    if (yLocation >= 435 && xLocation > (mouseX - paddleLength/2) && xLocation < (mouseX + paddleLength/2)) {
+    if (yLocation >= 435 && xLocation > (p.mapMouse - paddleLength/2) && xLocation < (p.mapMouse + paddleLength/2)) {
       yDirection *= -1;
       hitPaddle = true;
     }
@@ -162,10 +162,10 @@ class Brick {
 
   boolean detectCollision(Ball targetBall) {
     boolean hasCollided = false;
-    int thisLocation = int(mapXLoc);
+    int thisLocation = int(xloc);
     int extendLocation = int(thisLocation + brickWidth);
     if (((targetBall.yLocation + targetBall.ballRadius) >= yloc) && ((targetBall.yLocation + targetBall.ballRadius) <= yloc + brickHeight)) {
-      if((targetBall.xLocation >= thisLocation) && targetBall.xLocation <= extendLocation) {
+      if ((targetBall.xLocation >= thisLocation) && targetBall.xLocation <= extendLocation) {
         hasCollided = true;
       } else {
         hasCollided = false;
