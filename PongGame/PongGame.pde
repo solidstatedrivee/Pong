@@ -164,7 +164,7 @@ class Brick {
     boolean hasCollided = false;
     int thisLocation = int(xloc);
     int extendLocation = int(thisLocation + brickWidth);
-    if (((targetBall.yLocation + targetBall.ballRadius) >= yloc) && ((targetBall.yLocation + targetBall.ballRadius) <= yloc + brickHeight)) {
+    if (((targetBall.yLocation + targetBall.ballRadius) >= yloc - brickHeight) && ((targetBall.yLocation + targetBall.ballRadius) <= yloc + brickHeight)) {
       if ((targetBall.xLocation >= thisLocation) && targetBall.xLocation <= extendLocation) {
         hasCollided = true;
       } else {
