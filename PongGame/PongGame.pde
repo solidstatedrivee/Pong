@@ -1,6 +1,5 @@
 color bgColor, paddleColor, ballColor, scoreColor;
-float paddleLength, xLocation, xSpeed, xDirection, yLocation, ySpeed, yDirection, ballDiam, ballRadius;
-int score;
+int paddleLength, xSpeed, xDirection, ySpeed, yDirection, score;
 boolean hitPaddle, hitEdge, missed;
 Paddle p;
 Ball b;
@@ -17,13 +16,11 @@ void setup() {
   p = new Paddle();
   paddleLength = 100;
   b = new Ball();
-  ballDiam = 15;
   s = new ScoreBoard();
-  ballRadius = ballDiam / 2;
   xDirection = 1;
   yDirection = 1;
-  xSpeed = 2.8;
-  ySpeed = 2.2;
+  xSpeed = 3;
+  ySpeed = 2;
   collection = new BrickCollection();
   for (int i = 0; i < 10; i++) {
     collection.addBrick();
@@ -50,7 +47,7 @@ void draw() {
 }
 
 class Paddle {
-  float mapMouse; 
+  int mapMouse; 
 
   Paddle() {
   }
@@ -59,15 +56,18 @@ class Paddle {
     noStroke();
     fill(paddleColor);
     rectMode(CENTER);
-    mapMouse = map(mouseX, 0, width, paddleLength/4, width - (paddleLength/4));
+    mapMouse = int(map(mouseX, 0, width, paddleLength/4, width - (paddleLength/4)));
     rect(mapMouse, 450, paddleLength, 15);
   }
 }
 
 class Ball {
+  int xLocation, yLocation, ballDiam, ballRadius;
   Ball() {
-    xLocation = random(width);
-    yLocation = random(height/2);
+    xLocation = int(random(width));
+    yLocation = int(random(height/2));
+    ballDiam = 15;
+    ballRadius = ballDiam / 2;
   }
 
   void initBall() {
@@ -95,9 +95,9 @@ class Ball {
 
   void checkMissed() {
     missed = false;
-    if (yLocation > height - ballRadius) {
-      xLocation = random(width);
-      yLocation = random(height/2);
+    if (yLocation > height - ballDiam) {
+      xLocation = int(random(width));
+      yLocation = int(random(height/2));
       yDirection *= -1;
       missed = true;
     }
@@ -111,11 +111,11 @@ class Ball {
     }
   } 
 
-  float getX() {
+  int getX() {
     return xLocation;
   }
 
-  float getY() {
+  int getY() {
     return yLocation;
   }
 }
@@ -144,33 +144,34 @@ class ScoreBoard {
 }
 
 class Brick {
-  float xloc, yloc, mapXLoc;
-  float brickWidth = 50;
-  float brickHeight = 25;
+  int xloc, yloc, mapXLoc;
+  int brickWidth = 50;
+  int brickHeight = 25;
   Brick() {
-    xloc = random(width);
-    yloc = random(height) / 2;
+    xloc = int(random(width));
+    yloc = int(random(height)) / 2;
   }
 
   void initBrick() {
     noStroke();    
     fill(scoreColor);
     rectMode(CENTER);
-    mapXLoc = map(xloc, 0, width, brickWidth/2, width - brickWidth/2);
+    mapXLoc = int(map(xloc, 0, width, brickWidth/2, width - brickWidth/2));
     rect(mapXLoc, yloc, brickWidth, brickHeight);
   }
 
   boolean detectCollision(Ball targetBall) {
     boolean hasCollided = false;
-    float xLoc = targetBall.getX();
-    float yLoc = targetBall.getY();
-    float radius = (brickWidth > brickHeight) ? brickWidth/2 : brickHeight/2;
-    float distX = abs(xLoc - (mapXLoc + radius));
-    float distY = abs(yLoc - (yloc + radius));
-    float distance = sqrt((distX * distX) + (distY * distY));
-
-    if (distance <= radius) {
-      hasCollided = true;
+    int thisLocation = int(mapXLoc);
+    int extendLocation = int(thisLocation + brickWidth);
+    if (((targetBall.yLocation + targetBall.ballRadius) >= yloc) && ((targetBall.yLocation + targetBall.ballRadius) <= yloc + brickHeight)) {
+      if((targetBall.xLocation >= thisLocation) && targetBall.xLocation <= extendLocation) {
+        hasCollided = true;
+      } else {
+        hasCollided = false;
+      }
+    } else {
+      hasCollided = false;
     }
 
     return hasCollided;
