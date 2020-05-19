@@ -156,8 +156,8 @@ class Brick {
     noStroke();    
     fill(scoreColor);
     rectMode(CENTER);
-    mapXLoc = int(map(xloc, 0, width, brickWidth/2, width - brickWidth/2));
-    rect(mapXLoc, yloc, brickWidth, brickHeight);
+    //mapXLoc = int(map(xloc, 0, width, brickWidth/2, width - brickWidth/2));
+    rect(xloc, yloc, brickWidth, brickHeight);
   }
 
   boolean detectCollision(Ball targetBall) {
